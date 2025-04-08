@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\CommentStatus;
 use App\Repository\CommentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,25 +24,18 @@ class Comment
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    /**
-     * @var Collection<int, Book>
-     */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'comments')]
-    private Collection $book;
+    #[ORM\Column(enumType: CommentStatus::class)]
+    private ?CommentStatus $status = null;
 
-    public function __construct()
-    {
-        $this->book = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Book $book = null;
 
     public function getId(): ?int
     {
@@ -91,21 +83,9 @@ class Comment
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(\DateTimeImmutable $publishedAt): static
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -122,32 +102,26 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
-    public function getBook(): Collection
+    public function getStatus(): ?CommentStatus
     {
-        return $this->book;
+        return $this->status;
     }
 
-    public function addBook(Book $book): static
+    public function setStatus(CommentStatus $status): static
     {
-        if (!$this->book->contains($book)) {
-            $this->book->add($book);
-            $book->setComments($this);
-        }
+        $this->status = $status;
 
         return $this;
     }
 
-    public function removeBook(Book $book): static
+    public function getBook(): ?Book
     {
-        if ($this->book->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getComments() === $this) {
-                $book->setComments(null);
-            }
-        }
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
 
         return $this;
     }

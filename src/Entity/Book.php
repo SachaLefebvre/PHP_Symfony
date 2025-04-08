@@ -35,11 +35,11 @@ class Book
     private ?int $pageNumber = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?BookStatus $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?editor $editor = null;
+    private ?Editor $editor = null;
 
     /**
      * @var Collection<int, Author>
@@ -47,12 +47,16 @@ class Book
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]
     private Collection $authors;
 
-    #[ORM\ManyToOne(inversedBy: 'book')]
-    private ?Comment $comments = null;
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'book', orphanRemoval: true)]
+    private Collection $comments;
 
     public function __construct()
     {
         $this->authors = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,24 +136,24 @@ class Book
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?BookStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(BookStatus $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getEditor(): ?editor
+    public function getEditor(): ?Editor
     {
         return $this->editor;
     }
 
-    public function setEditor(?editor $editor): static
+    public function setEditor(?Editor $editor): static
     {
         $this->editor = $editor;
 
@@ -180,14 +184,32 @@ class Book
         return $this;
     }
 
-    public function getComments(): ?Comment
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function setComments(?Comment $comments): static
+    public function addComment(Comment $comment): static
     {
-        $this->comments = $comments;
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getBook() === $this) {
+                $comment->setBook(null);
+            }
+        }
 
         return $this;
     }

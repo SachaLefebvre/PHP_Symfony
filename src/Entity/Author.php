@@ -21,7 +21,7 @@ class Author
     #[ORM\Column]
     private ?\DateTimeImmutable $dateOfBirth = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateOfDeath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -72,7 +72,7 @@ class Author
         return $this->dateOfDeath;
     }
 
-    public function setDateOfDeath(\DateTimeImmutable $dateOfDeath): static
+    public function setDateOfDeath(?\DateTimeImmutable $dateOfDeath): static
     {
         $this->dateOfDeath = $dateOfDeath;
 
