@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste éditeur{% endblock %}
+
+{% block body %}
+    <br/>
+    <div class="w-50 m-auto">    
+        <h1>Liste des éditeurs</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for editor in editors %}
+                <tr>
+                    <td>{{ editor.name }}</td>
+                    <td>
+                        <a class="btn btn-dark" href="{{ path('app_admin_editor_show', {'id': editor.id}) }}">Afficher</a>
+                        <a class="btn btn-dark" href="{{ path('app_admin_editor_edit', {'id': editor.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Pas d'éditeur trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn btn-dark" href="{{ path('app_admin_editor_new') }}">Soumettre</a>
+    </div>
+    <br/>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livre{% endblock %}
+
+{% block body %}
+    <br/>
+    <div class="w-50 m-auto">
+        <h1>Livre</h1>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ book.id }}</td>
+                </tr>
+                <tr>
+                    <th>Title</th>
+                    <td>{{ book.title }}</td>
+                </tr>
+                <tr>
+                    <th>Isbn</th>
+                    <td>{{ book.isbn }}</td>
+                </tr>
+                <tr>
+                    <th>Cover</th>
+                    <td>{{ book.cover }}</td>
+                </tr>
+                <tr>
+                    <th>EditedAt</th>
+                    <td>{{ book.editedAt ? book.editedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Plot</th>
+                    <td>{{ book.plot }}</td>
+                </tr>
+                <tr>
+                    <th>PageNumber</th>
+                    <td>{{ book.pageNumber }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ book.status.getLabel() }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a class="btn btn-dark" href="{{ path('app_admin_book_index') }}">Retour à la liste</a>
+
+        <a class="btn btn-dark" href="{{ path('app_admin_book_edit', {'id': book.id}) }}">Modifier</a>
+        <br/>
+        <br/>
+        {{ include('admin/book/_delete_form.html.twig') }}
+    </div>
+    <br/>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres{% endblock %}
+
+{% block body %}
+    <br/>
+    <div class="w-50 m-auto">  
+        <h1>Liste des livres</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Isbn</th>
+                    <th>Cover</th>
+                    <th>EditedAt</th>
+                    <th>Plot</th>
+                    <th>PageNumber</th>
+                    <th>Status</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.cover }}</td>
+                    <td>{{ book.editedAt ? book.editedAt|date('Y-m-d') : '' }}</td>
+                    <td>{{ book.plot }}</td>
+                    <td>{{ book.pageNumber }}</td>
+                    <td>{{ book.status.getLabel() }}</td>
+                    <td>
+                        <a class="btn btn-dark" href="{{ path('app_admin_book_show', {'id': book.id}) }}">Afficher</a>
+                        <a class="btn btn-dark" href="{{ path('app_admin_book_edit', {'id': book.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">Pas de livre trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a class="btn btn-dark" href="{{ path('app_admin_book_new') }}">Créer un nouveau livre</a>
+    </div>
+    <br/>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel éditeur{% endblock %}
+
+{% block body %}
+    <br/>
+    <div class="w-50 m-auto">
+        <h1>Ajouter un éditeur</h1>
+        {{ include('admin/editor/_form.html.twig') }}
+        <br/>
+        <a class="btn btn-dark" href="{{ path('app_admin_editor_index') }}">Retour à la liste</a>
+    </div>
+    <br/>
+{% endblock %}
+  
